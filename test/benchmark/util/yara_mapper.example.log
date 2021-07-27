@@ -1,0 +1,28 @@
+Threads count:			4
+
+Filter loading time:		0.39782 sec		1.16218 %
+Reads filtering time:		9.59657 sec		28.035 %
+Reads copying time:		0.0899401 sec		0.262747 %
+Alignments copying time:	1.2573 sec		3.67301 %
+Cigars moving time:		0.304866 sec		0.890624 %
+
+================================================================================
+
+Total time:			34.2306 sec
+Genome loading time:		0.0219848 sec		0.0642256 %
+Reads loading time:		1.32851 sec		3.88105 %
+Seeding time:			0.110395 sec		0.322505 %
+Filtering time:			3.84085 sec		11.2205 %
+Classification time:		0.120894 sec		0.353175 %
+Ranking time:			0.348988 sec		1.01952 %
+Extension time:			7.81986 sec		22.8446 %
+Sorting time:			1.35732 sec		3.96523 %
+Compaction time:		0.704077 sec		2.05686 %
+Alignment time:			2.10357 sec		6.14529 %
+Output time:			3.08417 sec		9.00998 %
+
+================================================================================
+
+Total reads:			1048576
+Mapped reads:			1048576		100 %
+Avg reads per bin:		8192

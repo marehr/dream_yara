@@ -87,5 +87,6 @@ include (data/datasources.cmake)
 add_subdirectory (api)
 add_subdirectory (cli)
 add_subdirectory (coverage)
+add_subdirectory (benchmark)
 
 message (STATUS "${FontBold}You can run `make test` to build and run tests.${FontReset}")
