@@ -47,7 +47,7 @@ include (02_generate_reads.cmake)
 include (03_build_dream_yara_filter.cmake)
 include (04_build_dream_yara_fm_indices.cmake)
 
-enable_testing
+enable_testing ()
 
 set (benchmark_util_dir "${CMAKE_CURRENT_SOURCE_DIR}/util")
 set (benchmark_dir "${bin_dir}")
