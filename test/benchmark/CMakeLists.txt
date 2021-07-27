@@ -42,6 +42,9 @@ add_executable (generate_reads generate_reads.cpp)
 target_link_libraries (generate_reads PUBLIC seqan3::seqan3)
 
 include (padded_number.cmake)
+
+file (MAKE_DIRECTORY "${bin_dir}")
+
 include (01_simulate_genome.cmake)
 include (02_generate_reads.cmake)
 include (03_build_dream_yara_filter.cmake)
