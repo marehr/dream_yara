@@ -59,6 +59,7 @@ add_custom_target (benchmark1 DEPENDS dream_yara_mapper)
 
 add_custom_target (benchmark1_data
     DEPENDS
+        dream_yara_read_data
         dream_yara_fm_indices_data
         dream_yara_filter_data)
 
