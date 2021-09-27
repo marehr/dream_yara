@@ -36,6 +36,8 @@
 #ifndef APP_YARA_DIS_MAPPER_H_
 #define APP_YARA_DIS_MAPPER_H_
 
+#include <scq/slotted_cart_queue.hpp>
+
 using namespace seqan;
 
 // ==========================================================================
@@ -344,10 +346,18 @@ inline void clasifyLoadedReads(Mapper<TSpec, TMainConfig>  & mainMapper, TFilter
 
     std::vector<std::future<void>> tasks;
 
+    using read_id_t = uint32_t;
+    // needs 64kB * (numberOfBins + 50) space
+    scq::slotted_cart_queue<read_id_t> queue
+    {
+        scq::slot_count{disOptions.numberOfBins},
+        scq::cart_count{disOptions.numberOfBins + 50},
+        scq::cart_capacity{65536u}
+    };
 
     for (uint32_t taskNo = 0; taskNo < numThr; ++taskNo)
     {
-        tasks.emplace_back(std::async([=, &mainMapper, &disOptions, &filter] {
+        tasks.emplace_back(std::async([=, &queue, &mainMapper, &disOptions, &filter] {
             for (uint32_t readID = taskNo*batchSize; readID < numReads && readID < (taskNo +1) * batchSize; ++readID)
             {
                 std::vector<bool> selectedBins(disOptions.numberOfBins, false);
@@ -364,18 +374,41 @@ inline void clasifyLoadedReads(Mapper<TSpec, TMainConfig>  & mainMapper, TFilter
                 {
                     if(selectedBins[binNo])
                     {
-                        mtx.lock();
-                        disOptions.origReadIdMap[binNo].push_back(readID);
-                        mtx.unlock();
+                        // mtx.lock();
+                        // disOptions.origReadIdMap[binNo].push_back(readID);
+                        // mtx.unlock();
+                        queue.enqueue(scq::slot_id{binNo}, readID);
                     }
                 }
             }
         }));
     }
+    std::thread consumer{[&queue, &disOptions]()
+    {
+        while (true)
+        {
+            scq::cart_future<read_id_t> future = queue.dequeue();
+            if (!future.valid())
+                break;
+
+            auto && [slot_id, read_ids_span] = future.get();
+
+            // copy data from queue into final buffer
+            // mtx.lock();
+            std::vector<read_id_t> & read_ids = disOptions.origReadIdMap[slot_id.slot_id];
+            read_ids.insert(read_ids.end(), read_ids_span.begin(), read_ids_span.end());
+            // mtx.unlock();
+        }
+    }};
+
     for (auto &&task : tasks)
     {
         task.get();
     }
+
+    queue.close();
+
+    consumer.join();
 
     stop(mainMapper.timer);
     disOptions.filterReads += getValue(mainMapper.timer);
