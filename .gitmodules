@@ -12,3 +12,6 @@
 	path = lib/seqan3
 	url = https://github.com/seqan/seqan3.git
 	branch = master
+[submodule "lib/shopping_cart_queue"]
+	path = lib/shopping_cart_queue
+	url = https://github.com/marehr/shopping_cart_queue.git
