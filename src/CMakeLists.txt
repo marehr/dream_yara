@@ -114,7 +114,7 @@ elseif (COMPILER_IS_INTEL)
     endif ()
 endif ()
 
-find_package(SeqAn  QUIET REQUIRED CONFIG)
+find_package(SeqAn QUIET REQUIRED CONFIG)
 
 if (SEQAN_VERSION_STRING VERSION_LESS "2.3.1")
     message (FATAL_ERROR "The minimum SeqAn verison required is 2.3.1!")
@@ -281,6 +281,11 @@ target_link_libraries (dream_yara_indexer ${SEQAN_LIBRARIES})
 target_link_libraries (dream_yara_build_filter ${SEQAN_LIBRARIES})
 target_link_libraries (dream_yara_update_filter ${SEQAN_LIBRARIES})
 target_link_libraries (dream_yara_mapper ${SEQAN_LIBRARIES})
+
+if (TARGET seqan3::seqan3)
+    target_link_libraries (dream_yara_mapper seqan3::seqan3)
+endif ()
+target_include_directories (dream_yara_mapper PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../lib/shopping_cart_queue/include")
 
 add_custom_target ("${PROJECT_NAME}")
 
