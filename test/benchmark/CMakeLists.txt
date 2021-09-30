@@ -55,7 +55,16 @@ enable_testing ()
 set (benchmark_util_dir "${CMAKE_CURRENT_SOURCE_DIR}/util")
 set (benchmark_dir "${bin_dir}")
 
-add_custom_target (benchmark1 ALL DEPENDS dream_yara_mapper)
+string (CONCAT benchmark1_comment
+        "Execute `cmake --build . -t benchmark1_data` to prepare benchmark data!\n"
+        "After that use `repeat -n 20 ctest -C benchmark -R benchmark1_benchmark` to execute benchmark!\n"
+        "Benchmark results will be written to `${benchmark_dir}/benchmark_csv_file.csv`")
+
+add_custom_target (benchmark1
+    ALL
+    DEPENDS dream_yara_mapper
+    COMMENT "${benchmark1_comment}"
+)
 
 add_custom_target (benchmark1_data
     DEPENDS
@@ -71,4 +80,5 @@ add_test(
         "$<TARGET_FILE_DIR:dream_yara_mapper>"
         "${benchmark_dir}"
         "${benchmark_dir}"
+    CONFIGURATIONS "benchmark"
 )
