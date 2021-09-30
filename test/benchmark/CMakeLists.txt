@@ -55,7 +55,7 @@ enable_testing ()
 set (benchmark_util_dir "${CMAKE_CURRENT_SOURCE_DIR}/util")
 set (benchmark_dir "${bin_dir}")
 
-add_custom_target (benchmark1 DEPENDS dream_yara_mapper)
+add_custom_target (benchmark1 ALL DEPENDS dream_yara_mapper)
 
 add_custom_target (benchmark1_data
     DEPENDS
